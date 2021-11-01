@@ -8,12 +8,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-//import edu.wpi.first.wpilibj2.command.CommandBase;
-//import frc.robot.*;
- 
+import frc.robot.subsystems.HoodSubsystem;
+//import frc.robot.subsystems.HoodSubsystem;
+import edu.wpi.first.networktables.*;
+
 public class AutonomousDrive extends CommandBase {
-  
+  HoodSubsystem hood;
+  double tx;
+  double ty;
+  double tv;
+  double distanceError;
+  double headingError;
   private final DriveSubsystem driveSubsystem;
   public int t = 0;
   /**
@@ -34,21 +41,49 @@ public class AutonomousDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    t++;
-    if (t < 50){
-      driveSubsystem.manualDrive(1, 0, -.60);
+    tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    
+    //sets the heading error to the opposite of the tx value of the limelight
+    headingError = -tx;
+    distanceError = Constants.position1 - ty;
+    //proportional scaling of the move and turn variables
+    double turn = headingError * Constants.kPAim;
+    double move = distanceError * Constants.kPDistance;
+    //ensures that move and turn do not exceed the maximum
+    double testMaxMove = Constants.maxMove;
+    double testMaxTurn = Constants.maxTurn;
+
+    if(move > testMaxMove && move > 0) //go forward at 0.3 speed
+    {
+      move = testMaxMove;
     }
-  
+    else if (move < 0 && move < (-1*testMaxMove)) //go backwards at 0.3 speed
+    {
+      move = -1 * testMaxMove;
+    }
+    if(turn > testMaxTurn && turn > 0){
+      turn = testMaxTurn;
+    }
+    else if (turn < 0 && turn < (-1 * testMaxTurn))
+    {
+      turn = -1 * testMaxTurn;
+    }
+    driveSubsystem.autoAlignDrive(move, turn);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if(interrupted){
+      driveSubsystem.autoAlignDrive(0, 0);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (Math.abs(headingError) < Constants.minHeadingError && Math.abs(distanceError) < Constants.minDistanceError);
   }
 }
