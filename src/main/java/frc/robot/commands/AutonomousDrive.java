@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
+
+import com.revrobotics.CANSparkMax;
+
 //import frc.robot.subsystems.HoodSubsystem;
 import edu.wpi.first.networktables.*;
 
@@ -22,6 +25,8 @@ public class AutonomousDrive extends CommandBase {
   double distanceError;
   double headingError;
   private final DriveSubsystem driveSubsystem;
+  public CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorMotorDeviceID,MotorType.kBrushless);
+  public CANSparkMax shooterMotor = new CANSparkMax(Constants.shooterMotorDeviceID,MotorType.kBrushless);
   public int t = 0;
   /**
    * Creates a new AutonomousDrive.
@@ -71,6 +76,16 @@ public class AutonomousDrive extends CommandBase {
       turn = -1 * testMaxTurn;
     }
     driveSubsystem.autoAlignDrive(move, turn);
+    t++;
+    if (t > 50 && t < 400){
+      shooterMotor.set(Constants.shooterMotorSpeed);
+    }else if(t > 100 && t < 400){
+      conveyorMotor.set(Constants.conveyorMotorSpeed);
+    }else if( t > 400){
+      shooterMotor.set(0);
+      conveyorMotor.set(0);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
