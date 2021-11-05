@@ -74,9 +74,13 @@ public class AutonomousDrive extends CommandBase {
     {
       turn = -1 * testMaxTurn;
     }
-    driveSubsystem.autoAlignDrive(move, turn);
     t++;// Runs every 20ms
-    if (t > 50 && t < 400){ // 20ms times 50 is 1000ms or 1 second
+    /*if (t > 50){ //Uncomment if robot doesn't past the white line
+      driveSubsystem.manualDrive(1, 0, -.60);
+    }else{*/
+      driveSubsystem.autoAlignDrive(move, turn);
+    //}
+    if (t > 50 && t < 400){ //Change time if robot doesn't past the white line
       shooterMotor.set(Constants.shooterMotorSpeed);
     }else if(t > 100 && t < 400){
       conveyorMotor.set(Constants.conveyorMotorSpeed);
