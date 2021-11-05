@@ -75,13 +75,13 @@ public class AutonomousDrive extends CommandBase {
       turn = -1 * testMaxTurn;
     }
     driveSubsystem.autoAlignDrive(move, turn);
-    t++;
-    if (t > 50 && t < 400){
+    t++;// Runs every 20ms
+    if (t > 50 && t < 400){ // 20ms times 50 is 1000ms or 1 second
       shooterMotor.set(Constants.shooterMotorSpeed);
     }else if(t > 100 && t < 400){
       conveyorMotor.set(Constants.conveyorMotorSpeed);
     }else if( t > 400){
-      shooterMotor.set(0);
+      shooterMotor.set(0); //Shuts down motor after 8 seconds
       conveyorMotor.set(0);
     }
     
