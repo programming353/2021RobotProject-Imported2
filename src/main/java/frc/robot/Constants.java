@@ -59,6 +59,7 @@ public final class Constants {
 	public static int slowButtonNumber = 3;
 	public static int AutoAlignButtonNumber = 1;
 	public static int magicTurnButtonNumber = 4;
+	public static int inverseJoyStickControl = 16;
 
 	//Operator button constants
 	public static int shootButtonNumber = 1;

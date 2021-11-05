@@ -41,12 +41,15 @@ public class ManualDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    boolean inverseDriving = RobotContainer.driverStick.getRawButton(Constants.inverseJoyStickControl);
     double move = RobotContainer.driverStick.getY();
     double turn = RobotContainer.driverStick.getX();
     double turnConstant = Constants.nadavsSexyTurnNumber;
-    driveSubsystem.manualDrive(move, turn * turnConstant, scaleConstant());    
-    
+    if (inverseDriving == true){ //inverse driving is activated when button 16 is clicked and held
+      driveSubsystem.manualDrive(move * -1, turn * turnConstant *-1, scaleConstant()); 
+    }else{
+      driveSubsystem.manualDrive(move, turn * turnConstant, scaleConstant());    
+    }
   }
 
   // Called once the command ends or is interrupted.
