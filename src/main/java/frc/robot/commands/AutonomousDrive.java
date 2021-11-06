@@ -78,7 +78,6 @@ public class AutonomousDrive extends CommandBase {
     /*if (t > 50){ //Uncomment if robot doesn't past the white line
       driveSubsystem.manualDrive(1, 0, -.60);
     }else{*/
-      driveSubsystem.autoAlignDrive(move, turn);
     //}
     if (t > 50 && t < 400){ //Change time if robot doesn't past the white line
       shooterMotor.set(Constants.shooterMotorSpeed);
