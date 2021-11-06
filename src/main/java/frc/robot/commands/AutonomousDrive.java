@@ -82,7 +82,10 @@ public class AutonomousDrive extends CommandBase {
     //}
     if (t > 50 && t < 400){ //Change time if robot doesn't past the white line
       shooterMotor.set(Constants.shooterMotorSpeed);
-    }else if(t > 100 && t < 400){
+    }else{
+      driveSubsystem.autoAlignDrive(move, turn);
+    }
+    if(t > 100 && t < 400){
       conveyorMotor.set(Constants.conveyorMotorSpeed);
     }else if( t > 400){
       shooterMotor.set(0); //Shuts down motor after 8 seconds
